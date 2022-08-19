@@ -4,6 +4,7 @@ from scapy.all import *
 from scapy.layers.inet import IP, TCP, UDP
 import json 
 
+
 jmap={"maps":[]}
 
 def make_json(maps):
@@ -15,10 +16,8 @@ def make_json(maps):
 	with open("host_map.json","w") as f:
 		f.write(host_map)
 
-
 def analyze_pcap(file):
 	pkts = rdpcap(file)
-	
 	maps=[]
 
 	for pkt in pkts:
@@ -28,4 +27,4 @@ def analyze_pcap(file):
 				maps.append(sent)
 	make_json(maps)
 
-analyze_pcap("packets.pcap")
+sniff(prn=network_monitoring_for_visualization_version)
