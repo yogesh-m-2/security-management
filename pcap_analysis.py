@@ -26,5 +26,3 @@ def analyze_pcap(file):
 				sent=str(pkt[IP].src)+"-"+str(pkt[IP].dst)
 				maps.append(sent)
 	make_json(maps)
-
-sniff(prn=network_monitoring_for_visualization_version)

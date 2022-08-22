@@ -88,4 +88,5 @@ def scan_single_host(host):
 	f.write(str(nm[host]).replace("'", "\""))
 	f.close()
 
+
 scan_host_range("192.168.0.100","192.168.0.105")
