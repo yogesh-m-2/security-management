@@ -1,7 +1,7 @@
 import nmap
 import json
 import re
-
+import csv
 
 def format_to_json(jhost,start,end):
 	reformatted=re.sub("(\w+): {", r'"\1": {', jhost[1:])
@@ -88,5 +88,36 @@ def scan_single_host(host):
 	f.write(str(nm[host]).replace("'", "\""))
 	f.close()
 
+def make_host_list():
+	host_list=[]
+	read_data_file = open('data_file.csv', 'r')
+	csv_reader = csv.reader(read_data_file)
+	for line in csv_reader:
+		if(line[0] =="src"):
+			continue
+		if(line[0] not in host_list):
+			host_list.append(line[0])
+		if(line[1] not in host_list):
+			host_list.append(line[1])
+	read_data_file.close()
+	write_data_file = open('hostlist.txt', 'w')
+	csv_writer = csv.writer(write_data_file)
+	for line in host_list:
+		csv_writer.writerow([line])
+	
 
-scan_host_range("192.168.0.100","192.168.0.105")
+def scan_host_list():
+	jhost=""
+	make_host_list()
+	nm=nmap.PortScanner()
+	res=nm.scan('nmap -iL d.txt -O -v')
+	print(res)
+	for x in nm.all_hosts():
+		if(nm[x]['status']['state']=="up"):
+			jformat=str(nm[x])
+			jhost=jhost+","+'"'+x+'":'+jformat
+	format_to_json(jhost,"0","999")
+
+
+scan_host_list()
+#scan_host_range("192.168.0.100","192.168.0.105")
