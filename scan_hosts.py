@@ -116,7 +116,7 @@ def scan_host_list():
 		if(nm[x]['status']['state']=="up"):
 			jformat=str(nm[x])
 			jhost=jhost+","+'"'+x+'":'+jformat
-	format_to_json(jhost,"0","999")
+	format_to_json(jhost,"all_real_time_scanned","list")
 
 
 scan_host_list()
