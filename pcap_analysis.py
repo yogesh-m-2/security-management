@@ -15,6 +15,7 @@ def make_json(maps):
 	host_map=json.dumps(jmap)
 	with open("host_map.json","w") as f:
 		f.write(host_map)
+	return (host_map)
 
 def analyze_pcap(file):
 	pkts = rdpcap(file)
@@ -25,4 +26,7 @@ def analyze_pcap(file):
 			if(str(str(pkt[IP].src)+"-"+str(pkt[IP].dst)) not in maps and str(str(pkt[IP].dst)+"-"+str(pkt[IP].src)) not in maps):
 				sent=str(pkt[IP].src)+"-"+str(pkt[IP].dst)
 				maps.append(sent)
-	make_json(maps)
+	host_map=make_json(maps)
+	return(host_map)
+
+#print(analyze_pcap("packets.pcap"))

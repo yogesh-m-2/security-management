@@ -45,6 +45,7 @@ def check_map_exist(data):
 	res=read_csv_check(str(cmb_string))
 	if(res==1):
 		write_csv(data)
+		return(data)
 	
 
 def network_sniffing(pkt):
@@ -57,7 +58,7 @@ def network_sniffing(pkt):
 		jdict_tcp["dst-port"]=str(pkt.dport)
 		jdict_tcp["src-ip"]=str(pkt[IP].src)
 		jdict_tcp["dst-ip"]=str(pkt[IP].dst)
-		check_map_exist(json.dumps(jdict_tcp))
+		print(check_map_exist(json.dumps(jdict_tcp)))
 
 	if pkt.haslayer(UDP):
 		jdict_udp["datetime"]=str(time)
@@ -67,7 +68,7 @@ def network_sniffing(pkt):
 		jdict_udp["dst-port"]=str(pkt.dport)
 		jdict_udp["src-ip"]=str(pkt[IP].src)
 		jdict_udp["dst-ip"]=str(pkt[IP].dst)
-		check_map_exist(json.dumps(jdict_udp))
+		print(check_map_exist(json.dumps(jdict_udp)))
 
 	if pkt.haslayer(ICMP):
 		jdict_icmp["datetime"]=str(time)
@@ -76,10 +77,8 @@ def network_sniffing(pkt):
 		jdict_icmp["src-ip"]=str(pkt[IP].src)
 		jdict_icmp["dst-ip"]=str(pkt[IP].dst)
 		#print(json.dumps(jdict_icmp))
-		check_map_exist(json.dumps(jdict_icmp))
+		print(check_map_exist(json.dumps(jdict_icmp)))
 
 
 
-
-#read_csv_check("f")
-sniff(prn=network_sniffing)
+#sniff(prn=network_sniffing)

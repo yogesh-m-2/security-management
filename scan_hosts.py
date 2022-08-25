@@ -2,12 +2,14 @@ import nmap
 import json
 import re
 import csv
+import os
 
 def format_to_json(jhost,start,end):
 	reformatted=re.sub("(\w+): {", r'"\1": {', jhost[1:])
 	f=open("range_host_"+str(start)+str(end)+"_info.json","w")
 	f.write('{'+str(reformatted).replace("'", "\"")+'}')
 	f.close()
+	return('{'+str(reformatted).replace("'", "\"")+'}')
 
 
 def nmap_scan_classA(sub_host):
@@ -52,7 +54,8 @@ def scan_host_range(start,end):
 				if(nm[x]['status']['state']=="up"):
 					jformat=str(nm[x])
 					jhost=jhost+","+'"'+x+'":'+jformat
-			format_to_json(jhost,start,end)
+			reformatted=format_to_json(jhost,start,end)
+			return(reformatted)
 			
 		elif(sclass[0]=="10"):
 			if(0<=int(sclass[1])<=255 and 0<=int(sclass[2])<=255 and 0<=int(sclass[3])<=255 and 0<=int(eclass[1])<=255 and 0<=int(eclass[2])<=255 and 0<=int(eclass[3])<=255):
@@ -62,7 +65,8 @@ def scan_host_range(start,end):
 					if(nm[x]['status']['state']=="up"):
 						jformat=str(nm[x])
 						jhost=jhost+","+'"'+x+'":'+jformat
-				format_to_json(jhost,start,end)
+				reformatted=format_to_json(jhost,start,end)
+				return(reformatted)
 			else:
 				print("invalid address format")
 		elif(sclass[0]=="172"):
@@ -73,7 +77,8 @@ def scan_host_range(start,end):
 					if(nm[x]['status']['state']=="up"):
 						jformat=str(nm[x])
 						jhost=jhost+","+'"'+x+'":'+jformat
-				format_to_json(jhost,start,end)
+				reformatted=format_to_json(jhost,start,end)
+				return(reformatted)
 			else:
 				print("invalid address format")
 		else:
@@ -83,10 +88,10 @@ def scan_host_range(start,end):
 def scan_single_host(host):
 	nm=nmap.PortScanner()
 	res=nm.scan(hosts=host, arguments='-O -v')
-	print(nm[host])
 	f=open("single_host_"+host+"_info.json","w")
 	f.write(str(nm[host]).replace("'", "\""))
 	f.close()
+	return(str(nm[host]).replace("'", "\""))
 
 def make_host_list():
 	host_list=[]
@@ -107,17 +112,21 @@ def make_host_list():
 	
 
 def scan_host_list():
-	jhost=""
-	make_host_list()
-	nm=nmap.PortScanner()
-	res=nm.scan('nmap -iL d.txt -O -v')
-	print(res)
-	for x in nm.all_hosts():
-		if(nm[x]['status']['state']=="up"):
-			jformat=str(nm[x])
-			jhost=jhost+","+'"'+x+'":'+jformat
-	format_to_json(jhost,"all_real_time_scanned","list")
+	if(not os.path.exists("data_file.csv")):
+		return('{ "message" : "the file doesnt exist. sniff the traffic first" }')
+	else:
+		jhost=""
+		make_host_list()
+		nm=nmap.PortScanner()
+		res=nm.scan('nmap -iL d.txt -O -v')
+		for x in nm.all_hosts():
+			if(nm[x]['status']['state']=="up"):
+				jformat=str(nm[x])
+		jhost=jhost+","+'"'+x+'":'+jformat
+		reformatted=format_to_json(jhost,"all_real_time_scanned","list")
+		return(reformatted)
 
 
-scan_host_list()
-#scan_host_range("192.168.0.100","192.168.0.105")
+#print(scan_host_list())
+#print(scan_host_range("192.168.0.100","192.168.0.105"))
+#print(scan_single_host("192.168.0.102"))

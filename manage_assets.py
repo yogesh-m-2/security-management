@@ -53,5 +53,5 @@ ds={
 	}]
 }
 
-filter_assets_to_scope(string)
-delete_assets_from_scope(ds)
+#filter_assets_to_scope(string)
+#delete_assets_from_scope(ds)
