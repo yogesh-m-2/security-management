@@ -128,5 +128,5 @@ def scan_host_list():
 
 
 #print(scan_host_list())
-#print(scan_host_range("192.168.0.100","192.168.0.105"))
+print(scan_host_range("192.168.0.100","192.168.0.105"))
 #print(scan_single_host("192.168.0.102"))
